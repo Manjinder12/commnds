@@ -1,0 +1,12 @@
+sudo rm -rf test.war
+sudo jar -cvf test.war hello.jsp images/ index.html WEB-INF/ META-INF
+a=$(git rev-parse HEAD)
+sudo usermod -aG docker jenkins
+sudo docker build -t adisharma96/tomcat-poc:$a .
+b=$(sudo docker images | awk '{print $3}' | awk 'NR==2')
+echo $b
+container=$(sudo docker ps -a | awk '{print $1}' | awk 'NR==2')
+echo $container
+sudo docker container rm -f $container
+sudo docker run -itd --name tomcat -p 80:8080 $b
+
